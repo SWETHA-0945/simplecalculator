@@ -3,20 +3,32 @@ import './App.css';
 
 function App() {
   const [display, setDisplay] = useState('');
+  const [lastInput, setLastInput] = useState('');
 
   const handleButtonClick = (value) => {
     if (value === '=') {
-      try {
-        setDisplay(eval(display).toString());
-      } catch {
-        setDisplay('Error');
+      if (!['+', '-', '*', '/', '%'].includes(lastInput)) {
+        try {
+          setDisplay(eval(display).toString());
+        } catch {
+          setDisplay('Error');
+        }
       }
     } else if (value === 'AC') {
       setDisplay('');
+      setLastInput('');
     } else if (value === 'DEL') {
       setDisplay(display.slice(0, -1));
+      setLastInput(display.slice(-2, -1));
     } else {
-      setDisplay(display + value);
+      if (['+', '-', '*', '/', '%'].includes(value)) {
+        if (!['+', '-', '*', '/', '%'].includes(lastInput) && display !== '') {
+          setDisplay(display + value);
+        }
+      } else {
+        setDisplay(display + value);
+      }
+      setLastInput(value);
     }
   };
 
